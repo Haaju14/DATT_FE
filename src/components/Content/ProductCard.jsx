@@ -6,7 +6,7 @@ import {
   getWishlistAPI,
   addToWishlistAPI,
   removeFromWishlistAPI,
-} from "../../api/api";
+} from "../../api/api.js";
 import { FiShoppingCart, FiHeart } from "react-icons/fi";
 import { AiFillStar, AiFillHeart } from "react-icons/ai";
 import { toast } from "react-toastify";

@@ -5,7 +5,7 @@ import logo from "../../assets/image/imageCholimex.jpg";
 import image1 from "../../assets/image/image1.jpg";
 import image2 from "../../assets/image/image2.jpg";
 import image3 from "../../assets/image/image3.png";
-import { getAllProducts } from "../../api/api";
+import { getAllProducts } from "../../api/api.js";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
