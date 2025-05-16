@@ -11,6 +11,7 @@ export default defineConfig({
       host: "tmdt2.cholimexfood.com.vn",
       port: 5173,
       protocol: "ws",
+      clientPort: 80,
     },
     allowedHosts: ["tmdt2.cholimexfood.com.vn"],
   },

@@ -44,8 +44,15 @@ export const changePassword = (data, token) =>
   });
 
 // === PRODUCT ===
-export const getAllProducts = () => API.get("/products");
-
+export const getAllProducts = async () => {
+  try {
+    const response = await API.get("/products");
+    return { data: Array.isArray(response.data) ? response.data : [] };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return { data: [] };
+  }
+};
 export const getProductsByCategoryId = (id) =>
   API.get(`/categories/${id}/products`);
 

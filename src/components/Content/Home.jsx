@@ -11,26 +11,34 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
 function Home() {
-
-
-  
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAllProducts()
-      .then((res) => {
-        const sorted = res.data
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await getAllProducts();
+        const data = Array.isArray(res.data) ? res.data : [];
+        const sorted = data
           .filter((product) => product.CreatedAt)
           .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
         setProducts(sorted.slice(0, 8));
-      })
-      .catch((err) => console.error("Lỗi khi tải sản phẩm:", err));
+      } catch (err) {
+        console.error("Lỗi khi tải sản phẩm:", err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-useEffect(()=>{
-  window.scrollTo({top:0,behavior:"smooth"})
-})
-  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -109,7 +117,7 @@ useEffect(()=>{
                     tuân thủ nghiêm ngặt các tiêu chuẩn:
                   </p>
                   <ul className="list-disc pl-6 text-left">
-                    <p>✓ HACCP (An toàn thực phẩm quốc tế). </p>
+                    <p>✓ HACCP (An toàn thực phẩm quốc tế).</p>
                     <p>✓ ISO 22000.</p>
                     <p>✓ Chứng nhận Hữu cơ cho dòng sản phẩm cao cấp.</p>
                   </ul>
@@ -127,7 +135,7 @@ useEffect(()=>{
                   <ul className="list-disc pl-6 text-left">
                     <p>
                       ✓ Dây chuyền tự động hóa 100% từ khâu nguyên liệu đến đóng
-                      gói{" "}
+                      gói
                     </p>
                     <p>
                       ✓ Hệ thống kiểm soát chất lượng theo tiêu chuẩn ISO 22000,
@@ -214,28 +222,42 @@ useEffect(()=>{
           <h2 className="text-2xl font-bold mb-6 text-[#dd3333] border-b-5 text-center">
             Sản phẩm mới
           </h2>
-          <Slider {...sliderSettings}>
-            {products.map((product) => (
-              <div key={product.ProductID} className="px-2">
-                <div className="bg-white rounded shadow-md p-4">
-                  <img
-                    src={product.ImageURL}
-                    alt={product.ProductName}
-                    className="mb-2 rounded w-full h-[150px] object-cover"
-                  />
-                  <p className="text-center text-sm font-semibold">
-                    {product.ProductName}
-                  </p>
-                  <p className="text-center text-sm text-gray-500">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(product.Price)}
+          {loading ? (
+            <div className="text-center py-4">
+              <p className="text-gray-500">Đang tải sản phẩm...</p>
+            </div>
+          ) : (
+            <Slider {...sliderSettings}>
+              {Array.isArray(products) && products.length > 0 ? (
+                products.map((product) => (
+                  <div key={product.ProductID} className="px-2">
+                    <div className="bg-white rounded shadow-md p-4">
+                      <img
+                        src={product.ImageURL || "/default.jpg"}
+                        alt={product.ProductName}
+                        className="mb-2 rounded w-full h-[150px] object-cover"
+                      />
+                      <p className="text-center text-sm font-semibold">
+                        {product.ProductName}
+                      </p>
+                      <p className="text-center text-sm text-gray-500">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(product.Price)}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center px-2">
+                  <p className="text-gray-500">
+                    Không có sản phẩm để hiển thị.
                   </p>
                 </div>
-              </div>
-            ))}
-          </Slider>
+              )}
+            </Slider>
+          )}
         </div>
       </section>
     </CholimexLayout>
