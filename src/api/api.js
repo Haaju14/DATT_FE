@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://tmdt2.cholimexfood.com.vn/api/",
+  baseURL: "http://tmdt2.cholimexfood.com.vn",
 });
 
 API.interceptors.request.use((config) => {
