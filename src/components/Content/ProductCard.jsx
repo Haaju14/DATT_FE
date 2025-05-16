@@ -25,7 +25,7 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
   const loadProducts = async () => {
     try {
       const res = await getAllProducts();
-      let data = res.data;
+      let data = Array.isArray(res.data) ? res.data : []; // Đảm bảo data là mảng
 
       // Lọc theo danh mục
       if (selectedCategory) {
@@ -57,6 +57,7 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
       setProducts(data);
     } catch (error) {
       console.error("Lỗi load sản phẩm:", error);
+      setProducts([]); // Đặt mặc định là mảng rỗng nếu lỗi
     } finally {
       setLoading(false);
     }
@@ -66,9 +67,10 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
     if (!token) return;
     try {
       const res = await getWishlistAPI(token);
-      setWishlist(res.data);
+      setWishlist(Array.isArray(res.data) ? res.data : []); // Đảm bảo wishlist là mảng
     } catch (err) {
       console.error("Lỗi lấy wishlist:", err);
+      setWishlist([]);
     }
   };
 
@@ -156,11 +158,7 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {currentProducts.length === 0 ? (
-          <strong className="text-center text-white col-span-full text-3xl">
-            Không tìm thấy sản phẩm nào.
-          </strong>
-        ) : (
+        {Array.isArray(currentProducts) && currentProducts.length > 0 ? (
           currentProducts.map((p) => {
             const hasDiscount = p.OldPrice && p.OldPrice > p.Price;
             const isFavorite = wishlist.some(
@@ -181,7 +179,8 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
                   />
                   {hasDiscount && (
                     <span className="absolute top-2 right-2 bg-red-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md animate-pulse-once">
-                      -{Math.round(((p.OldPrice - p.Price) / p.OldPrice) * 100)}%
+                      -{Math.round(((p.OldPrice - p.Price) / p.OldPrice) * 100)}
+                      %
                     </span>
                   )}
                   {p.Rating && (
@@ -190,9 +189,7 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
                         <AiFillStar
                           key={i}
                           className={
-                            i < p.Rating
-                              ? "text-yellow-500"
-                              : "text-gray-300"
+                            i < p.Rating ? "text-yellow-500" : "text-gray-300"
                           }
                         />
                       ))}
@@ -256,6 +253,10 @@ function ProductCard({ selectedCategory, sortType, searchQuery }) {
               </div>
             );
           })
+        ) : (
+          <strong className="text-center text-white col-span-full text-3xl">
+            Không tìm thấy sản phẩm nào.
+          </strong>
         )}
       </div>
 

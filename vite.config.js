@@ -9,6 +9,7 @@ export default defineConfig({
     port: 5173,
     hmr: {
       host: "tmdt2.cholimexfood.com.vn",
+      port: 5173,
       protocol: "ws",
     },
     allowedHosts: ["tmdt2.cholimexfood.com.vn"],
