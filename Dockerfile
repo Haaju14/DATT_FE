@@ -1,18 +1,13 @@
-FROM node:18 as builder
-
+# build stage
+FROM node:18 AS build
 WORKDIR /app
 COPY . .
-
 RUN npm install
 RUN npm run build
 
-FROM nginx:alpine
-
-# Copy build
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy custom Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 5173
+# production stage
+FROM nginx:stable-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
