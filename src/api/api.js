@@ -15,7 +15,7 @@ API.interceptors.request.use((config) => {
 
 // === AUTH ===
 export const login = (data) =>
-  API.post("/login", {
+  API.post("/auth/login", {
     Email: data.email,
     Password: data.password,
   });
