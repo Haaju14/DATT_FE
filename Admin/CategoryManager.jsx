@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "htthttp://localhost:8080/",
+  baseURL: "http://tmdt2.cholimexfood.com.vn/",
 });
 
 API.interceptors.request.use((config) => {

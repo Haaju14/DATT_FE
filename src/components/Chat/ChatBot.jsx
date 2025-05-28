@@ -12,7 +12,7 @@ const ChatBot = () => {
   const chatRef = useRef(null);
 
   const API = axios.create({
-    baseURL: "http://localhost:8080/",
+    baseURL: "http://tmdt2.cholimexfood.com.vn/",
     timeout: 10000,
   });
 

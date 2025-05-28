@@ -33,7 +33,7 @@ const Dashboard = () => {
   const fetchStatistics = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/static", {
+      const res = await axios.get("http://tmdt2.cholimexfood.com.vn/static", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProductData(res.data.products || []);
