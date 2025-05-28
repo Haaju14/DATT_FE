@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://192.168.100.134:8080/",
+  baseURL: "htthttp://localhost:8080/",
 });
 
 API.interceptors.request.use((config) => {

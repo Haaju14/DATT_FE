@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 const API = axios.create({
-  baseURL: "http://192.168.100.134:8080/",
+  baseURL: "http://localhost:8080/",
 });
 
 API.interceptors.request.use((config) => {

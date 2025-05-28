@@ -11,7 +11,7 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://192.168.100.134:8080/login", {
+      const res = await axios.post("http://localhost:8080/login", {
         Email: email,
         Password: password,
       });

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://tmdt2.cholimexfood.com.vn/api/",
+  baseURL: "http://localhost:8080/api/",
 });
 
 
@@ -15,7 +15,7 @@ API.interceptors.request.use((config) => {
 
 // === AUTH ===
 export const login = (data) =>
-  API.post("/auth/login", {
+  API.post("/login", {
     Email: data.email,
     Password: data.password,
   });
