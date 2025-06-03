@@ -35,7 +35,7 @@ const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-100 via-white to-red-200 px-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-red-600">🔒 <br />PANEL ADMIN CHOLIMEX</h2>
+        <h2 className="text-2xl font-bold text-center text-red-600">🔒 <br />ADMIN CHOLIMEX</h2>
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">

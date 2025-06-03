@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://tmdt2.cholimexfood.com.vn/api/",
+  baseURL: "/api/",
 });
-
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) {
+  if (token && token !== "undefined") {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -15,32 +14,33 @@ API.interceptors.request.use((config) => {
 
 // === AUTH ===
 export const login = (data) =>
-  API.post("/login", {
+  API.post("/auth/login", {
     Email: data.email,
     Password: data.password,
   });
 
 export const register = (data) =>
-  API.post("/signup", {
+  API.post("/auth/signup", {
     FullName: data.name,
     Email: data.email,
     Password: data.password,
     Phone: data.phone,
     Address: data.address,
   });
+
 export const forgotPassword = (data) =>
-  API.post("/forgot-password", {
+  API.post("/auth/forgot-password", {
     Email: data.email,
   });
 
 export const resetPassword = (data) =>
-  API.post("/reset-password", {
+  API.post("/auth/reset-password", {
     Token: data.token,
     NewPassword: data.newPassword,
   });
 
 export const changePassword = (data, token) =>
-  API.post("/change-password", data, {
+  API.post("/auth/change-password", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -54,16 +54,17 @@ export const getAllProducts = async () => {
     return { data: [] };
   }
 };
+
 export const getProductsByCategoryId = (id) =>
   API.get(`/categories/${id}/products`);
 
 export const getAllCategories = () => API.get("/categories");
 
-export const getProductById = (id) => API.get(`/product/${id}`);
+export const getProductById = (id) => API.get(`/products/product/${id}`);
 
 // === CART ===
 export const addToCartAPI = (data, token) =>
-  API.post("/cart-add", data, {
+  API.post("/cart/cart-add", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -74,7 +75,7 @@ export const getCartAPI = (token) =>
 
 export const updateCartAPI = (Id, quantity, token) =>
   API.put(
-    `/cart-edit/${Id}`,
+    `/cart/cart-edit/${Id}`,
     { Quantity: quantity },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -82,138 +83,147 @@ export const updateCartAPI = (Id, quantity, token) =>
   );
 
 export const removeCartItemAPI = (cartId, token) =>
-  API.delete(`/del/${cartId}`, {
+  API.delete(`/cart/del/${cartId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 // === ORDER ===
 export const createOrderAPI = (data, token) =>
-  API.post("/order-add", data, {
+  API.post("/orders/order-add", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const processPaymentAPI = (data, token) =>
-  API.post("/payment", data, {
+  API.post("/orders/payment", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const getAllOrders = (token) =>
-  API.get("/order", {
+  API.get("/orders/order", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const getOrderById = (token, Id) =>
-  API.get(`/order/${Id}`, {
+  API.get(`/orders/order/${Id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 export const getOrderByIdUser = (token, Id) =>
-  API.get(`/order-user/${Id}`, {
+  API.get(`/orders/order-user/${Id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 // === ORDER ADMIN ===
 export const deleteOrder = (id) =>
-  API.delete(`/order-del/${id}`, {
+  API.delete(`/orders/order-del/${id}`, {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
 
 export const updateOrder = (id, data) =>
-  API.put(`/order-update/${id}`, data, {
+  API.put(`/orders/order-update/${id}`, data, {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
+
 export const getOrdersByUserId = (userId, token) =>
-  API.get(`/orders-all/${userId}`, {
+  API.get(`/orders/orders-all/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 // === LOYALTY POINTS ===
 export const getLoyaltyPointsAPI = (token) =>
-  API.get("/point", {
+  API.get("/loyalty/point", {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 export const getUserPointsByAdmin = (token, userId) =>
-  API.get(`/point/${userId}`, {
+  API.get(`/loyalty/point/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 // === LOYALTY POINTS ADMIN ===
 export const updateLoyaltyPoint = (id, data, token) =>
-  API.put(`/point-edit/${id}`, data, {
+  API.put(`/loyalty/point-edit/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const deleteLoyaltyPoint = (id, token) =>
-  API.delete(`/point-del/${id}`, {
+  API.delete(`/loyalty/point-del/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 // === USER PROFILE ===
 export const getUserProfile = (userId, token) =>
-  API.get(`/user-profile/${userId}`, {
+  API.get(`/users/user-profile/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const updateUserProfile = (userId, data) =>
-  API.put(`/update-profile/${userId}`, data);
+  API.put(`/users/update-profile/${userId}`, data);
 
 // === WISHLIST ===
 export const getWishlistAPI = (token) =>
-  API.get("/wishlist-all", {
+  API.get("/wishlist/wishlist-all", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const addToWishlistAPI = (data, token) =>
-  API.post("/wishlist-add", data, {
+  API.post("/wishlist/wishlist-add", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const removeFromWishlistAPI = (productId, token) =>
-  API.delete(`/wishlist-del/${productId}`, {
+  API.delete(`/wishlist/wishlist-del/${productId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 // === NOTIFICATION ===
 export const getNotifications = (token) =>
-  API.get("/noti", {
+  API.get("/notifications/noti", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const markNotificationAsRead = (id, token) =>
-  API.post(`/noti/read/${id}`, {
+  API.post(`/notifications/noti/read/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const createNotification = (data, token) =>
-  API.post("/noti-add", data, {
+  API.post("/notifications/noti-add", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const deleteNotification = (id, token) =>
-  API.delete(`/noti-del/${id}`, {
+  API.delete(`/notifications/noti-del/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const getAllNotifications = (token) =>
-  API.get("/noti-all", {
+  API.get("/notifications/noti-all", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 // === PRODUCT ADMIN ===
-export const addProduct = (data) =>
-  API.post("/product-add", data, {
+export const addProduct = () =>
+  API.post("/products/product-add", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   }).catch((error) => {
-    console.error("Error details:", error.response?.data); // Log chi tiết lỗi từ server
+    console.error("Error details:", error.response?.data);
     throw error;
   });
 
 export const updateProduct = (id, data) =>
-  API.put(`/product-update/${id}`, data);
+  API.put(`/products/product-update/${id}`, data);
 
-export const deleteProduct = (id) => API.delete(`/product-del/${id}`);
+export const deleteProduct = (id) => API.delete(`/products/product-del/${id}`);
+
 // === REVIEW ===
-export const getReviewsByProduct = (id) => API.get(`/review/product/${id}`);
+export const getReviewsByProduct = (id) =>
+  API.get(`/reviews/review/product/${id}`);
 
 export const createReview = (data, token) =>
-  API.post("/review-add", data, {
+  API.post("/reviews/review-add", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -223,26 +233,28 @@ export const getAvailableVouchers = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const redeemVoucher = (data) => API.post("/redeem-voucher", data);
+export const redeemVoucher = (data) =>
+  API.post("/vouchers/redeem-voucher", data);
 
 export const applyVoucher = (data, token) =>
-  API.post("/apply-voucher", data, {
+  API.post("/vouchers/apply-voucher", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 export const getRedeemedVouchers = (token) =>
-  API.get("/redeemed", {
+  API.get("/vouchers/redeemed", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
 // === USER ADMIN ===
-export const getAllUsers = () => API.get("/user-all");
+export const getAllUsers = () => API.get("/users/user-all");
 
-export const updateUser = (id, data) => API.put(`/update-profile/${id}`, data);
+export const updateUser = (id, data) =>
+  API.put(`/users/update-profile/${id}`, data);
 
-export const deleteUser = (id) => API.delete(`/delete-user/${id}`);
+export const deleteUser = (id) => API.delete(`/users/delete-user/${id}`);
 
-export const getRevenueStatistics = () => API.get("/static");
+export const getRevenueStatistics = () => API.get("/statistics/static");
 
 // === VOUCHER ADMIN ===
 export const getAllVouchers = (token) =>
@@ -266,8 +278,9 @@ export const deleteVoucher = (voucherId, token) =>
   });
 
 // === REVIEW ADMIN ===
-export const getAllReviews = () => API.get("/review-all");
+export const getAllReviews = () => API.get("/reviews/review-all");
 
-export const updateReview = (id, data) => API.put(`/review-update/${id}`, data);
+export const updateReview = (id, data) =>
+  API.put(`/reviews/review-update/${id}`, data);
 
-export const deleteReview = (id) => API.delete(`/review-delete/${id}`);
+export const deleteReview = (id) => API.delete(`/reviews/review-delete/${id}`);
